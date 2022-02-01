@@ -1,11 +1,11 @@
 //  Add your code here
-const {schema, model} =require("Mongoose");
+const {Schema, model} = require("mongoose");
 
-const CelebritySchema = new schema({
+const CelebritySchema = new Schema ({
     name: String,
     occupation: String,
-    catchPhrase: String,
-});
+    catchPhrase: String,    
+    });
 
 //exports the model in here
 module.exports = model ("Celebrity", CelebritySchema);
