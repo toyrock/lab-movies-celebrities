@@ -1,12 +1,20 @@
 //  Add your code here
-const {Schema, model} = require("mongoose");
 
-const CelebritySchema = new Schema ({
+const mongoose = require('mongoose')
+
+const CelebritySchema = mongoose.Schema({
+   /*  name:{
+        type:String,
+        required: true,
+    } */
     name: String,
     occupation: String,
     catchPhrase: String,    
-    });
+});
 
-//exports the model in here
-module.exports = model ("Celebrity", CelebritySchema);
+
+
+
+//exports the model in here!
+module.exports = mongoose.model ("Celebrity", CelebritySchema);
 

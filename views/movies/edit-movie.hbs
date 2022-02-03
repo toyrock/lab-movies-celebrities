@@ -1,38 +1,18 @@
-<h1>Edit Movie</h1>
-<div>
-    <a href="/celebrities">Celebrities List</a>
-</div>
-<div>
-    <a href="/celebrities/create">Create a New Celebrity</a>
-</div>
-<div>
-    <a href="/movies">Movies List</a>
-</div>
-<div>
-    <a href="/movies/create">Create a New Movie</a>
-</div>
+<h2>Edit Movie</h2>
+<form action="/movies/{{movie.id}}/edit" method="post">
 
-<form action="/movies/{{movieToEdit._id}}/edit" method="POST">
-    <label>Title</label>
-    <input type="text" name="title" value={{movieToEdit.title}} />
+    <input type="text" name="title" value="{{movie.title}}"/>
 
-    <label>Genre</label>
-    <input type="text" name="genre" value={{movieToEdit.genre}}/>
+    <input type="text" name="genre"value="{{movie.genre}}"/>/>
 
-    <label>Plot</label>
-    <input type="text" name="plot" value={{movieToEdit.plot}} />
+    <input type="text" name="plot"value="{{movie.plot}}"/>/>
 
-        <label>Cast</label>
-        <select name="cast">
-            <option value="">Choose a cast member</option>
-            {{#each allCast}}
-            <option value={{_id}} selected>{{name}}</option>
-            {{else}}
-            <option value={{_id}}>{{name}}</option>
-            
-            {{/each}}
-        </select>
+    <select name="cast" multiple> {{!-- multiple select --}}
+        {{#each celebrities}} {{!-- running into res.render('movies/new-movie', {celebrities}); --}}
+        <option value="{{this.id}}">{{this.name}}</option>
+        {{/each}}
+    </select>
 
-    <button type="submit">Update</button>
-
+    <button type="submit">Create</button>
+    
 </form>

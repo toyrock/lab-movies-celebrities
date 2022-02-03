@@ -1,56 +1,83 @@
+// starter code in both routes/celebrities.routes.js and routes/movies.routes.js
 const router = require("express").Router();
-const Movie = require("../models/Movie.model");
+
+const async = require("hbs/lib/async");
+//we will use celebrity module
 const Celebrity = require("../models/Celebrity.model");
+const Movie = require("../models/movie.models")
 
 // all your routes here
-router.get("/movies/create", async (req, res) => {
-    const allCast = await Celebrity.find().sort({name: 1})
-    res.render("movies/new-movie", {allCast});
+router.get('/create', async (req, res)=>{
+    const celebrities = await Celebrity.find() //all of them
+    res.render('movies/new-movie', {celebrities});
+})
+router.post('/create', async (req, res) =>{
+    
+    const movie= new Movie();
+    movie.title = req.body.title;
+    movie.genre = req.body.genre;
+    movie.plot = req.body.plot;
+    movie.cast = req.body.cast;
+    try {
+        await movie.save()
+        res.redirect('/movies')
+    }   catch (error) {
+        res.redirect('/movies/create')
+    }
 });
 
-router.post("/movies/create", async (req, res)=>{
-    const {title, genre, plot , cast} = req.body;
-    await Movie.create ({
-        title,
-        genre,
-        plot,
-        cast,
-    });
-    res.redirect("/movies");
+//GET 
+router.get('/', async (req, res) =>{
+    const movies = await Movie.find();
+    res.render('movies/movies', { movies });
 });
-
-router.get("/movies", async (req, res) =>{
-    const allMovies = await Movie.find();
-    res.render("movies/movies", {allMovies});
+//GET details
+router.get("/:id", async (req, res) => {
+    const movie = await Movie.findById(req.params.id).populate("cast"); //we add .populate("cast"); display the name. no more ID in Data
+    res.render('movies/movie-details', {movie});
 });
+//Delete
 
-router.get("/movies/:id", async (req, res) =>{
-    const movieDetail = await Movie.findById(req.params.id).populate("cast");
-    res.render("movies/movie-details", movieDetail);
-});
-
-router.post("/movies/:id/delete", async (req, res) =>{
+router.post('/:id/delete', async (req, res) => {
     await Movie.findByIdAndDelete(req.params.id);
-    res.redirect("/movies");
+    res.redirect('/movies');
 });
 
-router.get("/movies/:id/edit", async (req, res) =>{
-    const movieToEdit = await Movie.findById(req.params.id);
-    const allCast = await Celebrity.find().sort({name: 1});
+//edit get
 
-    res.render("movies/edit-movie", {movieToEdit, allCast});
+router.get('/:id/edit', async (req, res) => {
+    const movie = await Movie.findById(req.params.id);
+    const celebrities = await Celebrity.find();
+    res.render('movies/edit-movie', { movie, celebrities });
+
 });
- 
-//fills in the spaces automatically when u press the book link
- router.post("/movies/:id/edit", async (req, res) =>{
-    const {title, genre, plot, cast} = req.body;
-    await Movie.findByIdAndUpdate(req.params.id, {
-        title,
-        genre,
-        plot, 
-        cast,
+
+//edit post
+
+router.post('/:id/edit', async (req, res) => {
+    const movie = await Movie.findByIdAndUpdate (req.params.id, { 
+    title: req.body.title,
+    genre: req.body.genre,
+    plot: req.body.plot,
+    cast: req.body.cast,
     });
-    res.redirect("/movies");
+    res.redirect('/movies');
+    
+    /* 
+    //findByID way
+    movie.title = req.body.title;
+    movie.genre = req.body.genre;
+    movie.plot = req.body.plot;
+    movie.cast = req.body.cast;
+    
+    try{
+        await movie.save();
+        res.redirect('/movies')
+    } catch (error){
+        res.redirect (`/movies/${movie.id}/edit`);
+
+    } */
 });
 
 module.exports = router;
+

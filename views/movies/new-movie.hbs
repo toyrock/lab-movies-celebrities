@@ -1,34 +1,18 @@
 <h2>New Movie</h2>
-<div>
-    <a href="/celebrities">Celebrities List</a>
-</div>
-<div>
-    <a href="/celebrities/create">Create a New Celebrity</a>
-</div>
-<div>
-    <a href="/movies">Movies List</a>
-</div>
-<div>
-    <a href="/movies/create">Create a New Movie</a>
-</div>
+<form action="/movies/create" method="post">
 
-<form action="/movies/create" method="POST">
+    <input type="text" name="title"/>
 
-    <input type="text" name="title" placeholder="title" />
+    <input type="text" name="genre"/>
 
-    <input type="text" name="genre" placeholder="genre" />
+    <input type="text" name="plot"/>
 
-    <input type="text" name="plot" placeholder="plot" />
-
-    <select name="cast" multiple>
-        <option value="">All cast members</option>
-        {{#each allCast}}
-        
-        <option value={{_id}}>{{name}}</option>
-    
+    <select name="cast" multiple> {{!-- multiple select --}}
+        {{#each celebrities}} {{!-- running into res.render('movies/new-movie', {celebrities}); --}}
+        <option value="{{this.id}}">{{this.name}}</option>
         {{/each}}
     </select>
 
-
     <button type="submit">Create</button>
+    
 </form>
